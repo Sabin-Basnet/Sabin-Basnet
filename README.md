@@ -14,21 +14,21 @@ A profile README template with an automated market exchange section.
 <table>
   <tr>
     <td><strong>Current Price</strong></td>
-    <td>$4.05</td>
+    <td>$3.54</td>
     <td><strong>24h Change</strong></td>
-    <td>-16.15%</td>
+    <td>-12.59%</td>
   </tr>
   <tr>
     <td><strong>Total Volume</strong></td>
-    <td>13</td>
+    <td>15</td>
     <td><strong>Trend</strong></td>
     <td>▼ Bearish</td>
   </tr>
 </table>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Wallet%20Value-$16.20-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
-  <img src="https://img.shields.io/badge/Profit%2FLoss-4.05-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
+  <img src="https://img.shields.io/badge/Wallet%20Value-$14.16-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
+  <img src="https://img.shields.io/badge/Profit%2FLoss-3.54-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
 </div>
 
 <div align="center">
@@ -42,8 +42,8 @@ A profile README template with an automated market exchange section.
 
 | Rank | Investor | Shares Owned | Avg Buy Price | Total Profit/Loss |
 | --- | --- | ---: | ---: | ---: |
-| 1 | @Sabin-Basnet | 2 | $0.95 | $18.59 |
-| 2 | @demo | 1 | $1.50 | $4.55 |
+| 1 | @Sabin-Basnet | 0 | $0.00 | $18.59 |
+| 2 | @demo | 1 | $1.50 | $4.04 |
 | 3 | @testuser | 0 | $0.00 | $0.35 |
-| 4 | @testuser2 | 1 | $4.50 | $-0.45 |
+| 4 | @testuser2 | 1 | $4.50 | $-0.96 |
 <!-- MARKET_END -->
