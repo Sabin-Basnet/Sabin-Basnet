@@ -1,38 +1,51 @@
-name: Profile Stock Exchange Engine
+name: Profile Stock Exchange
 
 on:
   issues:
     types: [opened]
 
+permissions:
+  contents: write
+  issues: write
+
 jobs:
-  trade:
-    runs-on: ubuntu-latest
+  run-market:
     if: startsWith(github.event.issue.title, 'market:')
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
-      - name: Execute Trade Order
+      - name: Run market engine
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          OUTPUT=$(python market_engine.py "${{ github.event.issue.title }}" "${{ github.actor }}")
-          echo "TRADE_RESULT=$OUTPUT" >> $GITHUB_ENV
+          python market_engine.py "${{ github.event.issue.title }}" "${{ github.actor }}" | tee market_output.txt
 
-      - name: Commit Updated Market Ledger & README
+      - name: Commit market updates
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add market_state.json README.md market_chart.svg
-          git commit -m "market: executed trade for @${{ github.actor }}" || exit 0
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add market_state.json market_chart.svg README.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Update market exchange state"
+            git push origin main
+          fi
 
-      - name: Reply & Close Order Issue
+      - name: Comment and close issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh issue comment ${{ github.event.issue.number }} --body "${{ env.TRADE_RESULT }}"
-          gh issue close ${{ github.event.issue.number }} --reason "completed"
+          output=$(cat market_output.txt 2>/dev/null || true)
+          gh issue comment "${{ github.event.issue.number }}" --body "$output"
+          gh issue close "${{ github.event.issue.number }}" || true
