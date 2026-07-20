@@ -60,8 +60,21 @@ def parse_action(title):
         action = payload.split()[0].upper() if payload else ""
         if action not in {"BUY", "SELL"}:
             return None
-        # Force quantity to 1 share per transaction
-        return {"action": action, "quantity": 1}
+        
+        # Parse quantity from title
+        quantity = 1
+        if len(payload.split()) > 1:
+            try:
+                quantity = int(payload.split()[1])
+            except ValueError:
+                quantity = 1
+        
+        # BUY: force 1 share per transaction
+        if action == "BUY":
+            return {"action": action, "quantity": 1}
+        
+        # SELL: allow custom quantity
+        return {"action": action, "quantity": max(1, quantity)}
     return None
 
 
@@ -169,27 +182,29 @@ def execute_trade(state, action, username):
 
     if action["action"] == "SELL":
         owned = int(entry.get("shares", 0))
-        if owned < 1:
-            return False, f"@{username} only owns {owned} $sabin and cannot sell."
+        quantity = action["quantity"]
+        
+        if owned < quantity:
+            return False, f"@{username} only owns {owned} $sabin and cannot sell {quantity}."
         
         trade_price = current_price
-        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + (trade_price - float(entry.get("avg_buy_price", 0.0)))
-        entry["shares"] = owned - 1
+        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + ((trade_price - float(entry.get("avg_buy_price", 0.0))) * quantity)
+        entry["shares"] = owned - quantity
         
         if int(entry.get("shares", 0)) <= 0:
             entry["avg_buy_price"] = 0.0
         
-        # Dynamic price decrease based on supply pressure
-        # Formula: base_decrease * (1 + supply_pressure)
+        # Dynamic price decrease based on supply pressure (scales with quantity sold)
+        # Formula: base_decrease * quantity * (1 + supply_pressure)
         supply_pressure = (total_shares_held / max(1, total_shares_held + 5)) * 0.1
-        price_decrease = 0.25 + (0.15 * supply_pressure)  # Base 0.25, +up to 0.15 based on supply
+        price_decrease = (0.25 + (0.15 * supply_pressure)) * quantity  # Scale by quantity
         new_price = round(max(1.0, current_price - price_decrease), 2)
         
         state["current_price"] = new_price
-        state["total_volume"] = total_volume + 1
+        state["total_volume"] = total_volume + quantity
         state["price_history"].append(new_price)
         
-        return True, f"SELL 1 $sabin executed for @{username}. New price: ${new_price:.2f}."
+        return True, f"SELL {quantity} $sabin executed for @{username}. New price: ${new_price:.2f}."
 
     return False, "Unsupported action."
 
@@ -242,7 +257,11 @@ def generate_chart_svg(price_history):
         y = padding + (step / 4) * (height - padding * 2)
         grid_lines.append(f'<line x1="{padding}" y1="{y:.2f}" x2="{width - padding}" y2="{y:.2f}" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/>')
 
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
+    # Add timestamp comment to bypass caching
+    timestamp = datetime.now(timezone.utc).isoformat()
+    
+    svg = f'''<!-- Generated: {timestamp} -->
+<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
   <rect width="100%" height="100%" fill="#07140f" rx="24"/>
   <rect x="18" y="18" width="864" height="284" rx="20" fill="#091a12" stroke="#1f3d34" stroke-width="2"/>
   <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
@@ -309,10 +328,10 @@ def build_readme_section(state, repo_slug):
 
 <div align="center">
   <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_1_SHARE-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy 1 share" /></a>
-  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_1_SHARE-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell 1 share" /></a>
+  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_SHARES-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell shares" /></a>
 </div>
 
-> 📋 **Rules**: Buy or sell **1 share at a time** • **Max 3 buys per day** • Price adjusts dynamically based on demand/supply
+> 📋 **Rules**: BUY **1 share at a time** (max 3 per day) • SELL **1+ shares anytime** • Price adjusts dynamically based on demand/supply
 
 ### 🏆 Top 10 Shareholders & Profit Leaderboard
 

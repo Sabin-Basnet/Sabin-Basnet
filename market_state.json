@@ -1,6 +1,6 @@
 {
-  "current_price": 4.24,
-  "total_volume": 10,
+  "current_price": 4.05,
+  "total_volume": 13,
   "price_history": [
     1.0,
     1.5,
@@ -9,7 +9,8 @@
     3.0,
     2.5,
     4.5,
-    4.24
+    4.83,
+    4.05
   ],
   "users": {
     "demo": {
@@ -23,7 +24,7 @@
       "realized_pnl": 2.0
     },
     "Sabin-Basnet": {
-      "shares": 4,
+      "shares": 2,
       "avg_buy_price": 0.95,
       "buys": [
         "2026-07-20T15:32:11.269406+00:00",
@@ -33,7 +34,7 @@
         "2026-07-20T15:54:29.176935+00:00",
         "2026-07-20T15:54:29.176935+00:00"
       ],
-      "realized_pnl": 4.3
+      "realized_pnl": 12.39
     },
     "testuser": {
       "shares": 0,
@@ -42,6 +43,14 @@
         "2026-07-20T15:58:48.716670+00:00"
       ],
       "realized_pnl": 0.3500000000000001
+    },
+    "testuser2": {
+      "shares": 1,
+      "avg_buy_price": 4.5,
+      "buys": [
+        "2026-07-20T16:04:32.488407+00:00"
+      ],
+      "realized_pnl": 0.0
     }
   }
 }
