@@ -60,13 +60,8 @@ def parse_action(title):
         action = payload.split()[0].upper() if payload else ""
         if action not in {"BUY", "SELL"}:
             return None
-        quantity = 1
-        if len(payload.split()) > 1:
-            try:
-                quantity = int(payload.split()[1])
-            except ValueError:
-                quantity = 1
-        return {"action": action, "quantity": max(1, quantity)}
+        # Force quantity to 1 share per transaction
+        return {"action": action, "quantity": 1}
     return None
 
 
@@ -140,35 +135,61 @@ def execute_trade(state, action, username):
     prune_recent_buys(entry, now)
 
     current_price = float(state.get("current_price", 1.0))
+    total_volume = int(state.get("total_volume", 0))
+    
+    # Calculate market metrics for dynamic pricing
+    total_shares_held = sum(int(user.get("shares", 0)) for user in state.get("users", {}).values())
+    market_cap = current_price * max(1, total_shares_held)
+    
     if action["action"] == "BUY":
         if len(entry.get("buys", [])) >= 3:
-            return False, f"@{username} has reached the 3-buy limit in 24 hours."
+            return False, f"@{username} has reached the 3-buy limit in 24 hours. Max 1 share per transaction, max 3 per day."
+        
         shares = int(entry.get("shares", 0))
         avg_cost = float(entry.get("avg_buy_price", 0.0))
-        new_avg = ((shares * avg_cost) + current_price) / (shares + action["quantity"]) if shares > 0 else current_price
-        entry["shares"] = shares + action["quantity"]
+        
+        # Update average buy price
+        new_avg = ((shares * avg_cost) + current_price) / (shares + 1) if shares > 0 else current_price
+        entry["shares"] = shares + 1
         entry["avg_buy_price"] = round(new_avg, 2)
-        for _ in range(action["quantity"]):
-            entry["buys"].append(now.isoformat())
-        state["current_price"] = round(max(1.0, current_price + (0.5 * action["quantity"])), 2)
-        state["total_volume"] = int(state.get("total_volume", 0)) + action["quantity"]
-        state["price_history"].append(state["current_price"])
-        return True, f"BUY {action['quantity']} $sabin executed for @{username}. New price: ${state['current_price']:.2f}."
+        entry["buys"].append(now.isoformat())
+        
+        # Dynamic price increase based on demand and volume
+        # Formula: base_increase * (1 + demand_pressure)
+        # demand_pressure increases with total volume and market activity
+        demand_pressure = (total_volume / max(1, total_shares_held)) * 0.1  # Normalize by holdings
+        price_increase = 0.3 + (0.2 * demand_pressure)  # Base 0.3, +up to 0.2 based on demand
+        new_price = round(max(1.0, current_price + price_increase), 2)
+        
+        state["current_price"] = new_price
+        state["total_volume"] = total_volume + 1
+        state["price_history"].append(new_price)
+        
+        return True, f"BUY 1 $sabin executed for @{username}. New price: ${new_price:.2f}. (3 buys per day max)"
 
     if action["action"] == "SELL":
         owned = int(entry.get("shares", 0))
-        quantity = action["quantity"]
-        if owned < quantity:
-            return False, f"@{username} only owns {owned} $sabin and cannot sell {quantity}."
+        if owned < 1:
+            return False, f"@{username} only owns {owned} $sabin and cannot sell."
+        
         trade_price = current_price
-        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + ((trade_price - float(entry.get("avg_buy_price", 0.0))) * quantity)
-        entry["shares"] = owned - quantity
+        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + (trade_price - float(entry.get("avg_buy_price", 0.0)))
+        entry["shares"] = owned - 1
+        
         if int(entry.get("shares", 0)) <= 0:
             entry["avg_buy_price"] = 0.0
-        state["current_price"] = round(max(1.0, current_price - (0.5 * quantity)), 2)
-        state["total_volume"] = int(state.get("total_volume", 0)) + quantity
-        state["price_history"].append(state["current_price"])
-        return True, f"SELL {quantity} $sabin executed for @{username}. New price: ${state['current_price']:.2f}."
+        
+        # Dynamic price decrease based on supply pressure
+        # Formula: base_decrease * (1 + supply_pressure)
+        supply_pressure = (total_shares_held / max(1, total_shares_held + 5)) * 0.1
+        price_decrease = 0.25 + (0.15 * supply_pressure)  # Base 0.25, +up to 0.15 based on supply
+        new_price = round(max(1.0, current_price - price_decrease), 2)
+        
+        state["current_price"] = new_price
+        state["total_volume"] = total_volume + 1
+        state["price_history"].append(new_price)
+        
+        return True, f"SELL 1 $sabin executed for @{username}. New price: ${new_price:.2f}."
 
     return False, "Unsupported action."
 
@@ -287,11 +308,11 @@ def build_readme_section(state, repo_slug):
 </div>
 
 <div align="center">
-  <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_QTY-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy quantity" /></a>
-  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_QTY-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell quantity" /></a>
+  <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_1_SHARE-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy 1 share" /></a>
+  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_1_SHARE-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell 1 share" /></a>
 </div>
 
-> Tip: Add a quantity after the action, for example: <code>market: BUY 3</code> or <code>market: SELL 2</code>
+> 📋 **Rules**: Buy or sell **1 share at a time** • **Max 3 buys per day** • Price adjusts dynamically based on demand/supply
 
 ### 🏆 Top 10 Shareholders & Profit Leaderboard
 

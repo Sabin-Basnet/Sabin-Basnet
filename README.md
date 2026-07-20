@@ -14,34 +14,35 @@ A profile README template with an automated market exchange section.
 <table>
   <tr>
     <td><strong>Current Price</strong></td>
-    <td>$1.50</td>
+    <td>$2.59</td>
     <td><strong>24h Change</strong></td>
-    <td>-16.67%</td>
+    <td>-9.12%</td>
   </tr>
   <tr>
     <td><strong>Total Volume</strong></td>
-    <td>5</td>
+    <td>7</td>
     <td><strong>Trend</strong></td>
     <td>▼ Bearish</td>
   </tr>
 </table>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Wallet%20Value-$3.00-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
-  <img src="https://img.shields.io/badge/Profit%2FLoss-1.50-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
+  <img src="https://img.shields.io/badge/Wallet%20Value-$7.77-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
+  <img src="https://img.shields.io/badge/Profit%2FLoss-2.59-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
 </div>
 
 <div align="center">
-  <a href="https://github.com/Sabin-Basnet/Sabin-Basnet/issues/new?title=market%3A+BUY"><img src="https://img.shields.io/badge/BUY_QTY-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy quantity" /></a>
-  <a href="https://github.com/Sabin-Basnet/Sabin-Basnet/issues/new?title=market%3A+SELL"><img src="https://img.shields.io/badge/SELL_QTY-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell quantity" /></a>
+  <a href="https://github.com/Sabin-Basnet/Sabin-Basnet/issues/new?title=market%3A+BUY"><img src="https://img.shields.io/badge/BUY_1_SHARE-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy 1 share" /></a>
+  <a href="https://github.com/Sabin-Basnet/Sabin-Basnet/issues/new?title=market%3A+SELL"><img src="https://img.shields.io/badge/SELL_1_SHARE-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell 1 share" /></a>
 </div>
 
-> Tip: Add a quantity after the action, for example: <code>market: BUY 3</code> or <code>market: SELL 2</code>
+> 📋 **Rules**: Buy or sell **1 share at a time** • **Max 3 buys per day** • Price adjusts dynamically based on demand/supply
 
 ### 🏆 Top 10 Shareholders & Profit Leaderboard
 
 | Rank | Investor | Shares Owned | Avg Buy Price | Total Profit/Loss |
 | --- | --- | ---: | ---: | ---: |
-| 1 | @demo | 3 | $1.50 | $3.00 |
-| 2 | @Sabin-Basnet | 1 | $2.25 | $1.00 |
+| 1 | @demo | 1 | $1.50 | $3.09 |
+| 2 | @Sabin-Basnet | 1 | $2.25 | $1.09 |
+| 3 | @testuser | 0 | $0.00 | $0.35 |
 <!-- MARKET_END -->
