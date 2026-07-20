@@ -213,7 +213,7 @@ def generate_chart_svg(price_history):
     latest_value = values[-1]
     trend_color = "#34d399" if latest_value >= values[0] else "#f59e0b"
 
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 {width} {height}">
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
   <defs>
     <linearGradient id="panelGlow" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#0f2f24"/>
@@ -241,8 +241,8 @@ def generate_chart_svg(price_history):
   <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
   <text x="52" y="96" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
   {''.join(grid_lines)}
-  <polyline points="{line_points}" fill="none" stroke="url(#lineGlow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)"/>
   <polygon points="{area_points}" fill="url(#areaGlow)"/>
+  <polyline points="{line_points}" fill="none" stroke="url(#lineGlow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)"/>
   <polyline points="{line_points}" fill="none" stroke="#ecfdf5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
   <circle cx="{last_x:.2f}" cy="{last_y:.2f}" r="8" fill="#ecfdf5" stroke="{trend_color}" stroke-width="3"/>
   <text x="{width - 150}" y="72" fill="#34d399" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">${latest_value:.2f}</text>
