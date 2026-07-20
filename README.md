@@ -14,15 +14,15 @@ A profile README template with an automated market exchange section.
 <table>
   <tr>
     <td><strong>Current Price</strong></td>
-    <td>$3.00</td>
+    <td>$2.50</td>
     <td><strong>24h Change</strong></td>
-    <td>+20.00%</td>
+    <td>-16.67%</td>
   </tr>
   <tr>
     <td><strong>Total Volume</strong></td>
-    <td>4</td>
+    <td>5</td>
     <td><strong>Trend</strong></td>
-    <td>▲ Bullish</td>
+    <td>▼ Bearish</td>
   </tr>
 </table>
 
@@ -35,6 +35,6 @@ A profile README template with an automated market exchange section.
 
 | Rank | Investor | Shares Owned | Avg Buy Price | Total Profit/Loss |
 | --- | --- | ---: | ---: | ---: |
-| 1 | @demo | 3 | $1.50 | $4.50 |
-| 2 | @Sabin-Basnet | 2 | $2.25 | $1.50 |
+| 1 | @demo | 3 | $1.50 | $3.00 |
+| 2 | @Sabin-Basnet | 1 | $2.25 | $1.00 |
 <!-- MARKET_END -->
