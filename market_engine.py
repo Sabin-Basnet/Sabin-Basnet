@@ -152,7 +152,6 @@ def execute_trade(state, action, username):
     
     # Calculate market metrics for dynamic pricing
     total_shares_held = sum(int(user.get("shares", 0)) for user in state.get("users", {}).values())
-    market_cap = current_price * max(1, total_shares_held)
     
     if action["action"] == "BUY":
         if len(entry.get("buys", [])) >= 3:
@@ -168,10 +167,8 @@ def execute_trade(state, action, username):
         entry["buys"].append(now.isoformat())
         
         # Dynamic price increase based on demand and volume
-        # Formula: base_increase * (1 + demand_pressure)
-        # demand_pressure increases with total volume and market activity
-        demand_pressure = (total_volume / max(1, total_shares_held)) * 0.1  # Normalize by holdings
-        price_increase = 0.3 + (0.2 * demand_pressure)  # Base 0.3, +up to 0.2 based on demand
+        demand_pressure = (total_volume / max(1, total_shares_held)) * 0.1
+        price_increase = 0.3 + (0.2 * demand_pressure)
         new_price = round(max(1.0, current_price + price_increase), 2)
         
         state["current_price"] = new_price
@@ -195,9 +192,8 @@ def execute_trade(state, action, username):
             entry["avg_buy_price"] = 0.0
         
         # Dynamic price decrease based on supply pressure (scales with quantity sold)
-        # Formula: base_decrease * quantity * (1 + supply_pressure)
         supply_pressure = (total_shares_held / max(1, total_shares_held + 5)) * 0.1
-        price_decrease = (0.25 + (0.15 * supply_pressure)) * quantity  # Scale by quantity
+        price_decrease = (0.25 + (0.15 * supply_pressure)) * quantity
         new_price = round(max(1.0, current_price - price_decrease), 2)
         
         state["current_price"] = new_price
@@ -225,20 +221,22 @@ def build_leaderboard(state, current_price):
         unrealized = compute_unrealized_pnl(entry, current_price)
         total_pnl = round(realized + unrealized, 2)
         leaderboard.append((username, shares, float(entry.get("avg_buy_price", 0.0)), total_pnl))
-    leaderboard.sort(key=lambda item: item[3], reverse=True)
+    
+    # Sort primarily by Shares Owned (descending), secondarily by Total PnL (descending)
+    leaderboard.sort(key=lambda item: (item[1], item[3]), reverse=True)
     return leaderboard[:10]
 
 
 def generate_chart_svg(price_history):
     width, height = 900, 320
     padding = 50
-    values = [float(value) for value in price_history]
-    if len(values) < 2:
-        values = values + [values[-1]]
+    
+    # Plot recent 30 trades to prevent crowding as history grows
+    raw_values = [float(value) for value in price_history[-30:]] if len(price_history) >= 30 else [float(value) for value in price_history]
+    values = raw_values if len(raw_values) >= 2 else raw_values + [raw_values[-1]]
 
-    min_price = min(values) - 0.5
+    min_price = max(1.0, min(values) - 0.5)
     max_price = max(values) + 0.5
-    min_price = max(1.0, min_price)
     if max_price <= min_price:
         max_price = min_price + 1.0
 
@@ -257,20 +255,26 @@ def generate_chart_svg(price_history):
         y = padding + (step / 4) * (height - padding * 2)
         grid_lines.append(f'<line x1="{padding}" y1="{y:.2f}" x2="{width - padding}" y2="{y:.2f}" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/>')
 
-    # Add timestamp comment to bypass caching
     timestamp = datetime.now(timezone.utc).isoformat()
     
     svg = f'''<!-- Generated: {timestamp} -->
 <svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
   <rect width="100%" height="100%" fill="#07140f" rx="24"/>
   <rect x="18" y="18" width="864" height="284" rx="20" fill="#091a12" stroke="#1f3d34" stroke-width="2"/>
-  <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
-  <text x="52" y="96" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
+  <text x="52" y="60" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History ($sabin)</text>
+  <text x="52" y="82" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
+
+  <!-- Y-Axis Scale Bounds -->
+  <text x="{width - padding}" y="{padding}" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end">${max_price:.2f}</text>
+  <text x="{width - padding}" y="{height - padding + 15}" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="12" text-anchor="end">${min_price:.2f}</text>
+
   {''.join(grid_lines)}
   <polyline points="{line_points}" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <circle cx="{last_x:.2f}" cy="{last_y:.2f}" r="8" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
-  <text x="{width - 150}" y="72" fill="#34d399" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">${latest_value:.2f}</text>
-  <text x="{padding}" y="{height - 16}" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="13">Price trend</text>
+
+  <!-- Live Price Badge -->
+  <rect x="{width - 160}" y="35" width="110" height="32" rx="8" fill="#10b981"/>
+  <text x="{width - 105}" y="56" fill="#ffffff" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" text-anchor="middle">${latest_value:.2f}</text>
 </svg>
 '''
     return svg
@@ -281,11 +285,19 @@ def build_readme_section(state, repo_slug):
     previous_price = float(state.get("price_history", [1.0])[-2]) if len(state.get("price_history", [1.0])) > 1 else current_price
     if previous_price <= 0:
         previous_price = current_price
+    
     change_pct = 0.0 if previous_price == current_price else round(((current_price - previous_price) / previous_price) * 100, 2)
     trend = "▲ Bullish" if change_pct > 0 else "▼ Bearish" if change_pct < 0 else "◆ Neutral"
     links = build_issue_links(repo_slug)
     leaderboard = build_leaderboard(state, current_price)
-    chart_url = f"https://raw.githubusercontent.com/{repo_slug}/main/market_chart.svg"
+    
+    # Calculate Total Market Cap (Current Price * Total Shares Held Across All Users)
+    total_circulating_shares = sum(int(user.get("shares", 0)) for user in state.get("users", {}).values())
+    market_cap = round(current_price * total_circulating_shares, 2)
+
+    # Append timestamp parameter as cache buster for GitHub Camo CDN
+    cache_buster = int(datetime.now(timezone.utc).timestamp())
+    chart_url = f"https://raw.githubusercontent.com/{repo_slug}/main/market_chart.svg?v={cache_buster}"
 
     rows = []
     for index, (username, shares, avg_cost, total_pnl) in enumerate(leaderboard, start=1):
@@ -294,9 +306,8 @@ def build_readme_section(state, repo_slug):
     if not rows:
         rows.append("| 1 | No trades yet | 0 | $0.00 | $0.00 |")
 
-    total_wallet_value = round(current_price * max(1, len(rows)), 2)
-    wallet_badge = f"https://img.shields.io/badge/Wallet%20Value-${total_wallet_value:.2f}-10B981?logo=bitcoin&logoColor=white"
-    pnl_badge = f"https://img.shields.io/badge/Profit%2FLoss-{current_price:.2f}-F59E0B?logo=analytics&logoColor=white"
+    mcap_badge = f"https://img.shields.io/badge/Market%20Cap-${market_cap:.2f}-10B981?logo=bitcoin&logoColor=white"
+    supply_badge = f"https://img.shields.io/badge/Circulating%20Supply-{total_circulating_shares}%20shares-3B82F6?logo=analytics&logoColor=white"
 
     section = f'''## 📈 $sabin Coin Market
 
@@ -321,14 +332,14 @@ def build_readme_section(state, repo_slug):
   <tr>
     <td><strong>Total Volume</strong></td>
     <td>{int(state.get('total_volume', 0))}</td>
-    <td><strong>Trend</strong></td>
-    <td>{trend}</td>
+    <td><strong>Market Cap</strong></td>
+    <td>${market_cap:.2f}</td>
   </tr>
 </table>
 
 <div align="center">
-  <img src="{wallet_badge}" alt="Wallet value badge" />
-  <img src="{pnl_badge}" alt="Profit loss badge" />
+  <img src="{mcap_badge}" alt="Market cap badge" />
+  <img src="{supply_badge}" alt="Circulating supply badge" />
 </div>
 
 <div align="center">
@@ -375,7 +386,7 @@ def main():
     username = sanitize_username(github_actor)
 
     if action is None:
-        output = "No trade executed. Use a title like 'market: BUY 2' or 'market: SELL 3'."
+        output = "No trade executed. Use a title like 'market: BUY' or 'market: SELL 3'."
     else:
         success, detail = execute_trade(state, action, username)
         if success:

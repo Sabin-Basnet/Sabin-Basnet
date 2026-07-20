@@ -4,6 +4,11 @@ on:
   issues:
     types: [opened]
 
+# Prevents simultaneous trade collisions by forcing trades to queue sequentially
+concurrency:
+  group: profile-market-queue
+  cancel-in-progress: false
+
 permissions:
   contents: write
   issues: write
@@ -26,26 +31,32 @@ jobs:
 
       - name: Run market engine
         env:
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_ACTOR: ${{ github.actor }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
-          python market_engine.py "${{ github.event.issue.title }}" "${{ github.actor }}" | tee market_output.txt
+          python market_engine.py "$ISSUE_TITLE" "$ISSUE_ACTOR" | tee market_output.txt
 
       - name: Commit market updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add market_state.json market_chart.svg README.md
+          
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update market exchange state"
+            # Pull latest changes before pushing to eliminate merge conflicts
+            git pull --rebase origin main
+            git commit -m "market: executed trade for @${{ github.actor }}"
             git push origin main
           fi
 
       - name: Comment and close issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          output=$(cat market_output.txt 2>/dev/null || true)
-          gh issue comment "${{ github.event.issue.number }}" --body "$output"
-          gh issue close "${{ github.event.issue.number }}" || true
+          output=$(cat market_output.txt 2>/dev/null || echo "Trade processed successfully.")
+          gh issue comment "$ISSUE_NUMBER" --body "$output"
+          gh issue close "$ISSUE_NUMBER" || true
