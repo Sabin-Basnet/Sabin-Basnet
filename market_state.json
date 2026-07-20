@@ -1,22 +1,23 @@
 {
-  "current_price": 2.5,
-  "total_volume": 3,
+  "current_price": 1.5,
+  "total_volume": 5,
   "price_history": [
     1.0,
     1.5,
     2.0,
-    2.5
+    2.5,
+    1.5
   ],
   "users": {
     "demo": {
-      "shares": 3,
+      "shares": 1,
       "avg_buy_price": 1.5,
       "buys": [
         "2026-07-20T14:06:24.406558+00:00",
         "2026-07-20T15:30:29.502643+00:00",
         "2026-07-20T15:34:20.655512+00:00"
       ],
-      "realized_pnl": 0.0
+      "realized_pnl": 2.0
     },
     "Sabin-Basnet": {
       "shares": 1,

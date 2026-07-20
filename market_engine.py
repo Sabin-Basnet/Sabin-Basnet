@@ -56,8 +56,17 @@ def parse_action(title):
         return None
     normalized = title.strip()
     if normalized.lower().startswith("market:"):
-        action = normalized.split(":", 1)[1].strip().upper()
-        return action if action in {"BUY", "SELL"} else None
+        payload = normalized.split(":", 1)[1].strip()
+        action = payload.split()[0].upper() if payload else ""
+        if action not in {"BUY", "SELL"}:
+            return None
+        quantity = 1
+        if len(payload.split()) > 1:
+            try:
+                quantity = int(payload.split()[1])
+            except ValueError:
+                quantity = 1
+        return {"action": action, "quantity": max(1, quantity)}
     return None
 
 
@@ -131,33 +140,35 @@ def execute_trade(state, action, username):
     prune_recent_buys(entry, now)
 
     current_price = float(state.get("current_price", 1.0))
-    if action == "BUY":
+    if action["action"] == "BUY":
         if len(entry.get("buys", [])) >= 3:
             return False, f"@{username} has reached the 3-buy limit in 24 hours."
-        trade_price = current_price
         shares = int(entry.get("shares", 0))
         avg_cost = float(entry.get("avg_buy_price", 0.0))
-        new_avg = ((shares * avg_cost) + trade_price) / (shares + 1) if shares > 0 else trade_price
-        entry["shares"] = shares + 1
+        new_avg = ((shares * avg_cost) + current_price) / (shares + action["quantity"]) if shares > 0 else current_price
+        entry["shares"] = shares + action["quantity"]
         entry["avg_buy_price"] = round(new_avg, 2)
-        entry["buys"].append(now.isoformat())
-        state["current_price"] = round(max(1.0, current_price + 0.5), 2)
-        state["total_volume"] = int(state.get("total_volume", 0)) + 1
+        for _ in range(action["quantity"]):
+            entry["buys"].append(now.isoformat())
+        state["current_price"] = round(max(1.0, current_price + (0.5 * action["quantity"])), 2)
+        state["total_volume"] = int(state.get("total_volume", 0)) + action["quantity"]
         state["price_history"].append(state["current_price"])
-        return True, f"BUY executed for @{username}. New price: ${state['current_price']:.2f}."
+        return True, f"BUY {action['quantity']} $sabin executed for @{username}. New price: ${state['current_price']:.2f}."
 
-    if action == "SELL":
-        if int(entry.get("shares", 0)) < 1:
-            return False, f"@{username} does not own any shares to sell."
+    if action["action"] == "SELL":
+        owned = int(entry.get("shares", 0))
+        quantity = action["quantity"]
+        if owned < quantity:
+            return False, f"@{username} only owns {owned} $sabin and cannot sell {quantity}."
         trade_price = current_price
-        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + (trade_price - float(entry.get("avg_buy_price", 0.0)))
-        entry["shares"] = int(entry.get("shares", 0)) - 1
+        entry["realized_pnl"] = float(entry.get("realized_pnl", 0.0)) + ((trade_price - float(entry.get("avg_buy_price", 0.0))) * quantity)
+        entry["shares"] = owned - quantity
         if int(entry.get("shares", 0)) <= 0:
             entry["avg_buy_price"] = 0.0
-        state["current_price"] = round(max(1.0, current_price - 0.5), 2)
-        state["total_volume"] = int(state.get("total_volume", 0)) + 1
+        state["current_price"] = round(max(1.0, current_price - (0.5 * quantity)), 2)
+        state["total_volume"] = int(state.get("total_volume", 0)) + quantity
         state["price_history"].append(state["current_price"])
-        return True, f"SELL executed for @{username}. New price: ${state['current_price']:.2f}."
+        return True, f"SELL {quantity} $sabin executed for @{username}. New price: ${state['current_price']:.2f}."
 
     return False, "Unsupported action."
 
@@ -243,10 +254,14 @@ def build_readme_section(state, repo_slug):
     if not rows:
         rows.append("| 1 | No trades yet | 0 | $0.00 | $0.00 |")
 
-    section = f'''## 📈 Profile Stock Exchange
+    total_wallet_value = round(current_price * max(1, len(rows)), 2)
+    wallet_badge = f"https://img.shields.io/badge/Wallet%20Value-${total_wallet_value:.2f}-10B981?logo=bitcoin&logoColor=white"
+    pnl_badge = f"https://img.shields.io/badge/Profit%2FLoss-{current_price:.2f}-F59E0B?logo=analytics&logoColor=white"
+
+    section = f'''## 📈 $sabin Coin Market
 
 <div align="center">
-  <img src="{chart_url}" alt="Market price chart" width="100%" />
+  <img src="{chart_url}" alt="$sabin price chart" width="100%" />
 </div>
 
 ### ⚡ Live Market Snapshot
@@ -267,9 +282,16 @@ def build_readme_section(state, repo_slug):
 </table>
 
 <div align="center">
-  <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_1_SHARE-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy 1 Share" /></a>
-  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_1_SHARE-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell 1 Share" /></a>
+  <img src="{wallet_badge}" alt="Wallet value badge" />
+  <img src="{pnl_badge}" alt="Profit loss badge" />
 </div>
+
+<div align="center">
+  <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_QTY-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy quantity" /></a>
+  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_QTY-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell quantity" /></a>
+</div>
+
+> Tip: Add a quantity after the action, for example: <code>market: BUY 3</code> or <code>market: SELL 2</code>
 
 ### 🏆 Top 10 Shareholders & Profit Leaderboard
 
@@ -308,7 +330,7 @@ def main():
     username = sanitize_username(github_actor)
 
     if action is None:
-        output = "No trade executed. Use a title like 'market: BUY' or 'market: SELL'."
+        output = "No trade executed. Use a title like 'market: BUY 2' or 'market: SELL 3'."
     else:
         success, detail = execute_trade(state, action, username)
         if success:
