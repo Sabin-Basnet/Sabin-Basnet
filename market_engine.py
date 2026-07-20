@@ -202,49 +202,22 @@ def generate_chart_svg(price_history):
         points.append((x, y))
 
     line_points = " ".join(f"{x:.2f},{y:.2f}" for x, y in points)
-    area_points = f"{padding:.2f},{height - padding:.2f} " + line_points + f" {width - padding:.2f},{height - padding:.2f}"
+    last_x, last_y = points[-1]
+    latest_value = values[-1]
 
     grid_lines = []
     for step in range(5):
         y = padding + (step / 4) * (height - padding * 2)
         grid_lines.append(f'<line x1="{padding}" y1="{y:.2f}" x2="{width - padding}" y2="{y:.2f}" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/>')
 
-    last_x, last_y = points[-1]
-    latest_value = values[-1]
-    trend_color = "#34d399" if latest_value >= values[0] else "#f59e0b"
-
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">
-  <defs>
-    <linearGradient id="panelGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f2f24"/>
-      <stop offset="100%" stop-color="#07130d"/>
-    </linearGradient>
-    <linearGradient id="lineGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#6ee7b7"/>
-      <stop offset="100%" stop-color="#34d399"/>
-    </linearGradient>
-    <linearGradient id="areaGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#34d399" stop-opacity="0.45"/>
-      <stop offset="100%" stop-color="#34d399" stop-opacity="0.03"/>
-    </linearGradient>
-    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge>
-        <feMergeNode in="blur"/>
-        <feMergeNode in="SourceGraphic"/>
-      </feMerge>
-    </filter>
-  </defs>
-  <rect width="100%" height="100%" fill="url(#panelGlow)" rx="24"/>
-  <rect x="18" y="18" width="864" height="284" rx="20" fill="#07140f" stroke="#1f3d34" stroke-width="2"/>
-  <rect x="32" y="32" width="836" height="256" rx="16" fill="#081b12" stroke="#123b2a"/>
+  <rect width="100%" height="100%" fill="#07140f" rx="24"/>
+  <rect x="18" y="18" width="864" height="284" rx="20" fill="#091a12" stroke="#1f3d34" stroke-width="2"/>
   <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
   <text x="52" y="96" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
   {''.join(grid_lines)}
-  <polygon points="{area_points}" fill="url(#areaGlow)"/>
-  <polyline points="{line_points}" fill="none" stroke="url(#lineGlow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)"/>
-  <polyline points="{line_points}" fill="none" stroke="#ecfdf5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
-  <circle cx="{last_x:.2f}" cy="{last_y:.2f}" r="8" fill="#ecfdf5" stroke="{trend_color}" stroke-width="3"/>
+  <polyline points="{line_points}" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="{last_x:.2f}" cy="{last_y:.2f}" r="8" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
   <text x="{width - 150}" y="72" fill="#34d399" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">${latest_value:.2f}</text>
   <text x="{padding}" y="{height - 16}" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="13">Price trend</text>
 </svg>
@@ -261,6 +234,7 @@ def build_readme_section(state, repo_slug):
     trend = "▲ Bullish" if change_pct > 0 else "▼ Bearish" if change_pct < 0 else "◆ Neutral"
     links = build_issue_links(repo_slug)
     leaderboard = build_leaderboard(state, current_price)
+    chart_url = f"https://raw.githubusercontent.com/{repo_slug}/main/market_chart.svg"
 
     rows = []
     for index, (username, shares, avg_cost, total_pnl) in enumerate(leaderboard, start=1):
@@ -272,7 +246,7 @@ def build_readme_section(state, repo_slug):
     section = f'''## 📈 Profile Stock Exchange
 
 <div align="center">
-  <img src="market_chart.svg" alt="Market price chart" width="100%" />
+  <img src="{chart_url}" alt="Market price chart" width="100%" />
 </div>
 
 ### ⚡ Live Market Snapshot
@@ -339,12 +313,13 @@ def main():
         success, detail = execute_trade(state, action, username)
         if success:
             save_state(state)
-            with CHART_FILE.open("w", encoding="utf-8") as handle:
-                handle.write(generate_chart_svg(state.get("price_history", [1.0])))
-            update_readme(build_readme_section(state, get_repo_slug()))
             output = f"{detail}\nUser: @{username}\nCurrent price: ${state['current_price']:.2f}\nTotal volume: {state['total_volume']}"
         else:
             output = detail
+
+    with CHART_FILE.open("w", encoding="utf-8") as handle:
+        handle.write(generate_chart_svg(state.get("price_history", [1.0])))
+    update_readme(build_readme_section(state, get_repo_slug()))
 
     print(output)
 
