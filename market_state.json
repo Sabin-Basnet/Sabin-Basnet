@@ -1,6 +1,6 @@
 {
-  "current_price": 4.05,
-  "total_volume": 13,
+  "current_price": 4.42,
+  "total_volume": 14,
   "price_history": [
     1.0,
     1.5,
@@ -10,7 +10,8 @@
     2.5,
     4.5,
     4.83,
-    4.05
+    4.05,
+    4.42
   ],
   "users": {
     "demo": {
@@ -49,6 +50,14 @@
       "avg_buy_price": 4.5,
       "buys": [
         "2026-07-20T16:04:32.488407+00:00"
+      ],
+      "realized_pnl": 0.0
+    },
+    "testuser3": {
+      "shares": 1,
+      "avg_buy_price": 4.05,
+      "buys": [
+        "2026-07-20T16:14:35.099614+00:00"
       ],
       "realized_pnl": 0.0
     }

@@ -9,26 +9,31 @@ A profile README template with an automated market exchange section.
   <img src="https://raw.githubusercontent.com/Sabin-Basnet/Sabin-Basnet/main/market_chart.svg" alt="$sabin price chart" width="100%" />
 </div>
 
+<div align="center">
+  <h1 style="color: #34d399; margin: 10px 0;">💰 Current Price: $4.42</h1>
+  <p style="color: #6ee7b7; font-size: 14px; margin: 5px 0;">Change: <strong>+9.14%</strong> | Trend: <strong>▲ Bullish</strong></p>
+</div>
+
 ### ⚡ Live Market Snapshot
 
 <table>
   <tr>
     <td><strong>Current Price</strong></td>
-    <td>$4.05</td>
+    <td>$4.42</td>
     <td><strong>24h Change</strong></td>
-    <td>-16.15%</td>
+    <td>+9.14%</td>
   </tr>
   <tr>
     <td><strong>Total Volume</strong></td>
-    <td>13</td>
+    <td>14</td>
     <td><strong>Trend</strong></td>
-    <td>▼ Bearish</td>
+    <td>▲ Bullish</td>
   </tr>
 </table>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Wallet%20Value-$16.20-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
-  <img src="https://img.shields.io/badge/Profit%2FLoss-4.05-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
+  <img src="https://img.shields.io/badge/Wallet%20Value-$22.10-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
+  <img src="https://img.shields.io/badge/Profit%2FLoss-4.42-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
 </div>
 
 <div align="center">
@@ -42,8 +47,9 @@ A profile README template with an automated market exchange section.
 
 | Rank | Investor | Shares Owned | Avg Buy Price | Total Profit/Loss |
 | --- | --- | ---: | ---: | ---: |
-| 1 | @Sabin-Basnet | 2 | $0.95 | $18.59 |
-| 2 | @demo | 1 | $1.50 | $4.55 |
-| 3 | @testuser | 0 | $0.00 | $0.35 |
-| 4 | @testuser2 | 1 | $4.50 | $-0.45 |
+| 1 | @Sabin-Basnet | 2 | $0.95 | $19.33 |
+| 2 | @demo | 1 | $1.50 | $4.92 |
+| 3 | @testuser3 | 1 | $4.05 | $0.37 |
+| 4 | @testuser | 0 | $0.00 | $0.35 |
+| 5 | @testuser2 | 1 | $4.50 | $-0.08 |
 <!-- MARKET_END -->

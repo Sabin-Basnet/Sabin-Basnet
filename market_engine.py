@@ -304,6 +304,11 @@ def build_readme_section(state, repo_slug):
   <img src="{chart_url}" alt="$sabin price chart" width="100%" />
 </div>
 
+<div align="center">
+  <h1 style="color: #34d399; margin: 10px 0;">💰 Current Price: ${current_price:.2f}</h1>
+  <p style="color: #6ee7b7; font-size: 14px; margin: 5px 0;">Change: <strong>{change_pct:+.2f}%</strong> | Trend: <strong>{trend}</strong></p>
+</div>
+
 ### ⚡ Live Market Snapshot
 
 <table>
