@@ -1,0 +1,38 @@
+name: Profile Stock Exchange Engine
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  trade:
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.issue.title, 'market:')
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Execute Trade Order
+        run: |
+          OUTPUT=$(python market_engine.py "${{ github.event.issue.title }}" "${{ github.actor }}")
+          echo "TRADE_RESULT=$OUTPUT" >> $GITHUB_ENV
+
+      - name: Commit Updated Market Ledger & README
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add market_state.json README.md market_chart.svg
+          git commit -m "market: executed trade for @${{ github.actor }}" || exit 0
+          git push
+
+      - name: Reply & Close Order Issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue comment ${{ github.event.issue.number }} --body "${{ env.TRADE_RESULT }}"
+          gh issue close ${{ github.event.issue.number }} --reason "completed"
