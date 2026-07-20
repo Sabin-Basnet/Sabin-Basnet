@@ -27,7 +27,7 @@ A profile README template with an automated market exchange section.
 </table>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Wallet%20Value-$9.00-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
+  <img src="https://img.shields.io/badge/Wallet%20Value-$13.50-10B981?logo=bitcoin&logoColor=white" alt="Wallet value badge" />
   <img src="https://img.shields.io/badge/Profit%2FLoss-4.50-F59E0B?logo=analytics&logoColor=white" alt="Profit loss badge" />
 </div>
 
@@ -44,4 +44,5 @@ A profile README template with an automated market exchange section.
 | --- | --- | ---: | ---: | ---: |
 | 1 | @Sabin-Basnet | 5 | $0.95 | $18.50 |
 | 2 | @demo | 1 | $1.50 | $5.00 |
+| 3 | @testuser | 0 | $0.00 | $0.35 |
 <!-- MARKET_END -->
