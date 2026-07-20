@@ -183,41 +183,70 @@ def build_leaderboard(state, current_price):
 
 
 def generate_chart_svg(price_history):
-    width, height = 900, 280
-    padding = 40
-    if len(price_history) < 2:
-        price_history = price_history + [price_history[-1]]
+    width, height = 900, 320
+    padding = 50
+    values = [float(value) for value in price_history]
+    if len(values) < 2:
+        values = values + [values[-1]]
 
-    min_price = min(price_history) - 0.5
-    max_price = max(price_history) + 0.5
+    min_price = min(values) - 0.5
+    max_price = max(values) + 0.5
     min_price = max(1.0, min_price)
     if max_price <= min_price:
         max_price = min_price + 1.0
 
     points = []
-    for index, value in enumerate(price_history):
-        x = padding + (index / max(1, len(price_history) - 1)) * (width - padding * 2)
+    for index, value in enumerate(values):
+        x = padding + (index / max(1, len(values) - 1)) * (width - padding * 2)
         y = height - padding - ((value - min_price) / (max_price - min_price)) * (height - padding * 2)
         points.append((x, y))
 
-    path_data = ""
-    for idx, (x, y) in enumerate(points):
-        command = "M" if idx == 0 else "L"
-        path_data += f"{command}{x:.2f},{y:.2f} "
+    line_points = " ".join(f"{x:.2f},{y:.2f}" for x, y in points)
+    area_points = f"{padding:.2f},{height - padding:.2f} " + line_points + f" {width - padding:.2f},{height - padding:.2f}"
 
     grid_lines = []
     for step in range(5):
         y = padding + (step / 4) * (height - padding * 2)
-        grid_lines.append(f'<line x1="{padding}" y1="{y:.2f}" x2="{width - padding}" y2="{y:.2f}" stroke="#1f3d34" stroke-width="1"/>')
+        grid_lines.append(f'<line x1="{padding}" y1="{y:.2f}" x2="{width - padding}" y2="{y:.2f}" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/>')
 
-    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="280" viewBox="0 0 {width} {height}">
-  <rect width="100%" height="100%" fill="#07140f" rx="20"/>
-  <rect x="20" y="20" width="860" height="240" rx="16" fill="#0c1f17" stroke="#1f3d34"/>
+    last_x, last_y = points[-1]
+    latest_value = values[-1]
+    trend_color = "#34d399" if latest_value >= values[0] else "#f59e0b"
+
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 {width} {height}">
+  <defs>
+    <linearGradient id="panelGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f2f24"/>
+      <stop offset="100%" stop-color="#07130d"/>
+    </linearGradient>
+    <linearGradient id="lineGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="areaGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.03"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#panelGlow)" rx="24"/>
+  <rect x="18" y="18" width="864" height="284" rx="20" fill="#07140f" stroke="#1f3d34" stroke-width="2"/>
+  <rect x="32" y="32" width="836" height="256" rx="16" fill="#081b12" stroke="#123b2a"/>
+  <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
+  <text x="52" y="96" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
   {''.join(grid_lines)}
-  <path d="{path_data.strip()}" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="{path_data.strip()}" fill="none" stroke="#6ee7b7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>
-  <circle cx="{points[-1][0]:.2f}" cy="{points[-1][1]:.2f}" r="7" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
-  <text x="{padding}" y="{height - 10}" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="14">Price trend</text>
+  <polyline points="{line_points}" fill="none" stroke="url(#lineGlow)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="url(#softGlow)"/>
+  <polygon points="{area_points}" fill="url(#areaGlow)"/>
+  <polyline points="{line_points}" fill="none" stroke="#ecfdf5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.35"/>
+  <circle cx="{last_x:.2f}" cy="{last_y:.2f}" r="8" fill="#ecfdf5" stroke="{trend_color}" stroke-width="3"/>
+  <text x="{width - 150}" y="72" fill="#34d399" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">${latest_value:.2f}</text>
+  <text x="{padding}" y="{height - 16}" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="13">Price trend</text>
 </svg>
 '''
     return svg
@@ -229,6 +258,7 @@ def build_readme_section(state, repo_slug):
     if previous_price <= 0:
         previous_price = current_price
     change_pct = 0.0 if previous_price == current_price else round(((current_price - previous_price) / previous_price) * 100, 2)
+    trend = "▲ Bullish" if change_pct > 0 else "▼ Bearish" if change_pct < 0 else "◆ Neutral"
     links = build_issue_links(repo_slug)
     leaderboard = build_leaderboard(state, current_price)
 
@@ -239,22 +269,36 @@ def build_readme_section(state, repo_slug):
     if not rows:
         rows.append("| 1 | No trades yet | 0 | $0.00 | $0.00 |")
 
-    section = f'''## Profile Stock Exchange
+    section = f'''## 📈 Profile Stock Exchange
 
-Welcome to the automated market exchange for this profile.
+<div align="center">
+  <img src="market_chart.svg" alt="Market price chart" width="100%" />
+</div>
 
-### Live Market Snapshot
-- Current stock price: ${current_price:.2f}
-- 24h change: {change_pct:+.2f}%
-- Total volume: {int(state.get('total_volume', 0))}
+### ⚡ Live Market Snapshot
 
-![Market Chart](market_chart.svg)
+<table>
+  <tr>
+    <td><strong>Current Price</strong></td>
+    <td>${current_price:.2f}</td>
+    <td><strong>24h Change</strong></td>
+    <td>{change_pct:+.2f}%</td>
+  </tr>
+  <tr>
+    <td><strong>Total Volume</strong></td>
+    <td>{int(state.get('total_volume', 0))}</td>
+    <td><strong>Trend</strong></td>
+    <td>{trend}</td>
+  </tr>
+</table>
 
-### Trade Now
-- [BUY 1 SHARE]({links['buy']})
-- [SELL 1 SHARE]({links['sell']})
+<div align="center">
+  <a href="{links['buy']}"><img src="https://img.shields.io/badge/BUY_1_SHARE-10B981?style=for-the-badge&logo=trending-up&logoColor=white" alt="Buy 1 Share" /></a>
+  <a href="{links['sell']}"><img src="https://img.shields.io/badge/SELL_1_SHARE-F43F5E?style=for-the-badge&logo=trending-down&logoColor=white" alt="Sell 1 Share" /></a>
+</div>
 
-### Top 10 Shareholders & Profit Leaderboard
+### 🏆 Top 10 Shareholders & Profit Leaderboard
+
 | Rank | Investor | Shares Owned | Avg Buy Price | Total Profit/Loss |
 | --- | --- | ---: | ---: | ---: |
 {chr(10).join(rows)}
