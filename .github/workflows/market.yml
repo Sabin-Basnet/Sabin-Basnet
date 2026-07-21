@@ -1,62 +1,68 @@
-name: Profile Stock Exchange
+name: SABIN Market Engine
 
 on:
   issues:
     types: [opened]
 
-# Prevents simultaneous trade collisions by forcing trades to queue sequentially
-concurrency:
-  group: profile-market-queue
-  cancel-in-progress: false
-
 permissions:
   contents: write
   issues: write
 
+concurrency:
+  group: sabin-market
+  cancel-in-progress: false
+
 jobs:
-  run-market:
+  trade:
     if: startsWith(github.event.issue.title, 'market:')
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: main
+          fetch-depth: 1
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Run market engine
+      # No actions/setup-python — ubuntu-latest ships python3 preinstalled.
+      - name: Execute trade
         env:
           ISSUE_TITLE: ${{ github.event.issue.title }}
-          ISSUE_ACTOR: ${{ github.actor }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ACTOR: ${{ github.event.issue.user.login }}
         run: |
-          python market_engine.py "$ISSUE_TITLE" "$ISSUE_ACTOR" | tee market_output.txt
+          set +e
+          OUTPUT=$(python3 market_engine.py "$ISSUE_TITLE" "$GITHUB_ACTOR" 2>&1)
+          set -e
 
-      - name: Commit market updates
+          # Multi-line-safe write to GITHUB_ENV using a heredoc delimiter,
+          # so markdown/newlines in the trade result never break the workflow.
+          {
+            echo "RESULT<<EOF_MARKET_RESULT"
+            echo "$OUTPUT"
+            echo "EOF_MARKET_RESULT"
+          } >> "$GITHUB_ENV"
+
+      - name: Configure git identity
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add market_state.json market_chart.svg README.md
-          
-          if git diff --cached --quiet; then
-            echo "No changes to commit."
+
+      - name: Commit and push changes
+        run: |
+          git add market_state.json README.md market_chart.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(market): trade by @${{ github.event.issue.user.login }} (issue #${{ github.event.issue.number }})"
+            git push origin HEAD:main
           else
-            # Pull latest changes before pushing to eliminate merge conflicts
-            git pull --rebase origin main
-            git commit -m "market: executed trade for @${{ github.actor }}"
-            git push origin main
+            echo "No market state changes to commit."
           fi
 
-      - name: Comment and close issue
+      - name: Comment result on issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          output=$(cat market_output.txt 2>/dev/null || echo "Trade processed successfully.")
-          gh issue comment "$ISSUE_NUMBER" --body "$output"
-          gh issue close "$ISSUE_NUMBER" || true
+          gh issue comment "${{ github.event.issue.number }}" --body "${{ env.RESULT }}" --repo "${{ github.repository }}"
+
+      - name: Close issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh issue close "${{ github.event.issue.number }}" --reason "completed" --repo "${{ github.repository }}"
