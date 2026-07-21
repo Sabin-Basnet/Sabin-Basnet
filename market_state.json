@@ -1,18 +1,19 @@
 {
-  "current_price": 1.05,
+  "current_price": 1.008,
   "price_history": [
     1.0,
-    1.05
+    1.05,
+    1.008
   ],
-  "total_volume": 1,
+  "total_volume": 2,
   "users": {
     "Sabin-Basnet": {
-      "avg_buy_price": 1.0,
+      "avg_buy_price": 0.0,
       "buys": [
         "2026-07-21T05:15:19.912249+00:00"
       ],
-      "realized_pnl": 0.0,
-      "shares": 1
+      "realized_pnl": 0.05,
+      "shares": 0
     }
   }
 }

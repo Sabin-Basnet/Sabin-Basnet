@@ -7,29 +7,29 @@
     </linearGradient>
   </defs>
   <line x1="60" y1="50.00" x2="870" y2="50.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="54.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.06</text><line x1="60" y1="112.50" x2="870" y2="112.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="116.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.04</text><line x1="60" y1="175.00" x2="870" y2="175.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="179.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.02</text><line x1="60" y1="237.50" x2="870" y2="237.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="241.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.01</text><line x1="60" y1="300.00" x2="870" y2="300.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="304.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$0.99</text>
-  <path d="M 60.00,275.81 L 870.00,74.19 L 870.00,300.00 L 60.00,300.00 Z" fill="url(#areaFill)" stroke="none" />
-  <path d="M 60.00,275.81 L 870.00,74.19" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
-  <circle cx="60.00" cy="275.81" r="2.5" fill="#34d399" opacity="0.85" />
+  <path d="M 60.00,275.81 L 465.00,74.19 L 870.00,243.55 L 870.00,300.00 L 60.00,300.00 Z" fill="url(#areaFill)" stroke="none" />
+  <path d="M 60.00,275.81 L 465.00,74.19 L 870.00,243.55" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+  <circle cx="60.00" cy="275.81" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="465.00" cy="74.19" r="2.5" fill="#34d399" opacity="0.85" />
   
-    <circle cx="870.00" cy="74.19" r="3" fill="#a7f3d0" stroke="#07140f" stroke-width="1" />
-    <text x="870.00" y="64.19" text-anchor="middle" font-size="10" fill="#a7f3d0" font-family="monospace">$1.05</text>
+    <circle cx="465.00" cy="74.19" r="3" fill="#a7f3d0" stroke="#07140f" stroke-width="1" />
+    <text x="465.00" y="64.19" text-anchor="middle" font-size="10" fill="#a7f3d0" font-family="monospace">$1.05</text>
     <circle cx="60.00" cy="275.81" r="3" fill="#fca5a5" stroke="#07140f" stroke-width="1" />
     <text x="60.00" y="293.81" text-anchor="middle" font-size="10" fill="#fca5a5" font-family="monospace">$1.00</text>
     
   
-    <circle cx="870.00" cy="74.19" r="4" fill="#34d399" />
-    <circle cx="870.00" cy="74.19" r="4" fill="#34d399" opacity="0.6">
+    <circle cx="870.00" cy="243.55" r="4" fill="#34d399" />
+    <circle cx="870.00" cy="243.55" r="4" fill="#34d399" opacity="0.6">
       <animate attributeName="r" values="4;12;4" dur="1.8s" repeatCount="indefinite" />
       <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite" />
     </circle>
     
 
   <text x="60" y="24" font-size="14" fill="#a7f3d0" font-family="monospace" font-weight="bold">$SABIN / USD</text>
-  <text x="60" y="40" font-size="11" fill="#34d399" font-family="monospace">▲ +0.0500 (+5.00%) · last 2 trades</text>
+  <text x="60" y="40" font-size="11" fill="#34d399" font-family="monospace">▲ +0.0080 (+0.80%) · last 3 trades</text>
 
   <g transform="translate(740, 14)">
     <rect x="0" y="0" width="130" height="24" rx="6" fill="#0f2a1d" stroke="#34d399" stroke-width="1" />
-    <text x="65" y="16" text-anchor="middle" font-size="12" fill="#34d399" font-family="monospace" font-weight="bold">$1.0500</text>
+    <text x="65" y="16" text-anchor="middle" font-size="12" fill="#34d399" font-family="monospace" font-weight="bold">$1.0080</text>
   </g>
 
   <g transform="translate(740, 40)">
