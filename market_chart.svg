@@ -1,12 +1,41 @@
-<!-- Generated: 2026-07-20T16:17:48.448093+00:00 -->
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="320" viewBox="0 0 900 320">
-  <rect width="100%" height="100%" fill="#07140f" rx="24"/>
-  <rect x="18" y="18" width="864" height="284" rx="20" fill="#091a12" stroke="#1f3d34" stroke-width="2"/>
-  <text x="52" y="72" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="600">Market Price History</text>
-  <text x="52" y="96" fill="#6ee7b7" font-family="Segoe UI, Arial, sans-serif" font-size="13">Live trend • emerald mode</text>
-  <line x1="50" y1="50.00" x2="850" y2="50.00" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/><line x1="50" y1="105.00" x2="850" y2="105.00" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/><line x1="50" y1="160.00" x2="850" y2="160.00" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/><line x1="50" y1="215.00" x2="850" y2="215.00" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/><line x1="50" y1="270.00" x2="850" y2="270.00" stroke="#1f3d34" stroke-width="1" stroke-dasharray="4 4"/>
-  <polyline points="50.00,270.00 138.89,244.60 227.78,219.19 316.67,193.79 405.56,168.38 494.44,193.79 583.33,92.17 672.22,75.40 761.11,115.03 850.00,96.24" fill="none" stroke="#34d399" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="850.00" cy="96.24" r="8" fill="#ecfdf5" stroke="#34d399" stroke-width="3"/>
-  <text x="750" y="72" fill="#34d399" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700">$4.42</text>
-  <text x="50" y="304" fill="#86efac" font-family="Segoe UI, Arial, sans-serif" font-size="13">Price trend</text>
+<svg viewBox="0 0 900 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="$SABIN price chart">
+  <rect x="0" y="0" width="900" height="340" fill="#07140f" rx="12" />
+  <defs>
+    <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+  <line x1="60" y1="50.00" x2="870" y2="50.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="54.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.06</text><line x1="60" y1="112.50" x2="870" y2="112.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="116.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.04</text><line x1="60" y1="175.00" x2="870" y2="175.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="179.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.02</text><line x1="60" y1="237.50" x2="870" y2="237.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="241.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.01</text><line x1="60" y1="300.00" x2="870" y2="300.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="304.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$0.99</text>
+  <path d="M 60.00,275.81 L 870.00,74.19 L 870.00,300.00 L 60.00,300.00 Z" fill="url(#areaFill)" stroke="none" />
+  <path d="M 60.00,275.81 L 870.00,74.19" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+  <circle cx="60.00" cy="275.81" r="2.5" fill="#34d399" opacity="0.85" />
+  
+    <circle cx="870.00" cy="74.19" r="3" fill="#a7f3d0" stroke="#07140f" stroke-width="1" />
+    <text x="870.00" y="64.19" text-anchor="middle" font-size="10" fill="#a7f3d0" font-family="monospace">$1.05</text>
+    <circle cx="60.00" cy="275.81" r="3" fill="#fca5a5" stroke="#07140f" stroke-width="1" />
+    <text x="60.00" y="293.81" text-anchor="middle" font-size="10" fill="#fca5a5" font-family="monospace">$1.00</text>
+    
+  
+    <circle cx="870.00" cy="74.19" r="4" fill="#34d399" />
+    <circle cx="870.00" cy="74.19" r="4" fill="#34d399" opacity="0.6">
+      <animate attributeName="r" values="4;12;4" dur="1.8s" repeatCount="indefinite" />
+      <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite" />
+    </circle>
+    
+
+  <text x="60" y="24" font-size="14" fill="#a7f3d0" font-family="monospace" font-weight="bold">$SABIN / USD</text>
+  <text x="60" y="40" font-size="11" fill="#34d399" font-family="monospace">▲ +0.0500 (+5.00%) · last 2 trades</text>
+
+  <g transform="translate(740, 14)">
+    <rect x="0" y="0" width="130" height="24" rx="6" fill="#0f2a1d" stroke="#34d399" stroke-width="1" />
+    <text x="65" y="16" text-anchor="middle" font-size="12" fill="#34d399" font-family="monospace" font-weight="bold">$1.0500</text>
+  </g>
+
+  <g transform="translate(740, 40)">
+    <circle cx="8" cy="6" r="4" fill="#ef4444">
+      <animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite" />
+    </circle>
+    <text x="18" y="10" font-size="10" fill="#f87171" font-family="monospace" font-weight="bold">LIVE</text>
+  </g>
 </svg>
