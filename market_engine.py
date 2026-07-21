@@ -397,8 +397,8 @@ def build_readme_section(state, leaderboard):
     repo = os.environ.get("GITHUB_REPOSITORY", "owner/repo")
     owner_repo = repo if "/" in repo else "owner/repo"
     branch = os.environ.get("GITHUB_REF_NAME") or "main"
-    cache_buster = int(time.time())
-    chart_url = f"https://raw.githubusercontent.com/{owner_repo}/{branch}/{CHART_FILE}?v={cache_buster}"
+    cache_buster = int(time.time() * 1000)  
+    chart_url = f"https://cdn.jsdelivr.net/gh/{owner_repo}@{branch}/{CHART_FILE}?v={cache_buster}"
 
     total_circulating = sum(u.get("shares", 0) for u in state["users"].values())
     price = state["current_price"]

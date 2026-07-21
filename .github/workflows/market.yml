@@ -54,7 +54,14 @@ jobs:
           else
             echo "No market state changes to commit."
           fi
-
+      - name: Purge jsDelivr CDN cache
+        run: |
+          # Forces jsDelivr to re-fetch the freshly-pushed SVG immediately,
+          # instead of serving a stale cached copy for up to 12h.
+          curl -s -o /dev/null -w "%{http_code}\n" \
+            "https://purge.jsdelivr.net/gh/${{ github.repository }}@${{ github.ref_name }}/market_chart.svg" \
+            || echo "jsDelivr purge failed (non-fatal, continuing)"
+            
       - name: Comment result on issue
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

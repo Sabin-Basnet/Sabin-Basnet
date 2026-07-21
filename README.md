@@ -1,4 +1,4 @@
-# Hi, I'm [Your Name] 👋
+# Hi, I'm Sabin Basnet 👋
 
 Welcome to my GitHub profile — and to the **$SABIN Stock Exchange**, a live, community-driven token market that runs entirely on GitHub Issues and Actions.
 
@@ -10,7 +10,7 @@ Welcome to my GitHub profile — and to the **$SABIN Stock Exchange**, a live, c
 
 ## 🛠 How to Trade
 
-1. Click a badge above, or [open a new issue](../../issues/new).
+1. Click a buy/sell above, or [open a new issue](../../issues/new).
 2. Title it **exactly**:
    - `market: BUY` — buy 1 share
    - `market: SELL <quantity>` — sell shares, e.g. `market: SELL 3`
