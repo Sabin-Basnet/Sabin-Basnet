@@ -1,14 +1,23 @@
 {
-  "current_price": 1.1113,
+  "current_price": 1.1669,
   "price_history": [
     1.0,
     1.05,
     1.008,
     1.0584,
-    1.1113
+    1.1113,
+    1.1669
   ],
-  "total_volume": 4,
+  "total_volume": 5,
   "users": {
+    "Nishanbhattarai498": {
+      "avg_buy_price": 1.1113,
+      "buys": [
+        "2026-07-21T11:40:47.813963+00:00"
+      ],
+      "realized_pnl": 0.0,
+      "shares": 1
+    },
     "Sabin-Basnet": {
       "avg_buy_price": 1.0332,
       "buys": [
