@@ -1,5 +1,5 @@
 {
-  "current_price": 1.2252,
+  "current_price": 1.2865,
   "price_history": [
     1.0,
     1.05,
@@ -7,9 +7,10 @@
     1.0584,
     1.1113,
     1.1669,
-    1.2252
+    1.2252,
+    1.2865
   ],
-  "total_volume": 6,
+  "total_volume": 7,
   "users": {
     "Nishanbhattarai498": {
       "avg_buy_price": 1.1113,
@@ -20,14 +21,12 @@
       "shares": 1
     },
     "Sabin-Basnet": {
-      "avg_buy_price": 1.0332,
+      "avg_buy_price": 1.0972,
       "buys": [
-        "2026-07-21T05:15:19.912249+00:00",
-        "2026-07-21T05:17:14.491009+00:00",
-        "2026-07-21T05:32:22.390030+00:00"
+        "2026-07-29T15:32:53.132580+00:00"
       ],
       "realized_pnl": 0.05,
-      "shares": 2
+      "shares": 3
     },
     "tangwep": {
       "avg_buy_price": 1.1669,

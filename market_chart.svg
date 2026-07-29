@@ -6,13 +6,13 @@
       <stop offset="100%" stop-color="#10b981" stop-opacity="0" />
     </linearGradient>
   </defs>
-  <line x1="60" y1="50.00" x2="870" y2="50.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="54.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.25</text><line x1="60" y1="112.50" x2="870" y2="112.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="116.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.18</text><line x1="60" y1="175.00" x2="870" y2="175.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="179.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.11</text><line x1="60" y1="237.50" x2="870" y2="237.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="241.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.04</text><line x1="60" y1="300.00" x2="870" y2="300.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="304.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$0.97</text>
-  <path d="M 60.00,275.81 L 195.00,231.04 L 330.00,268.64 L 465.00,223.52 L 600.00,176.16 L 735.00,126.39 L 870.00,74.19 L 870.00,300.00 L 60.00,300.00 Z" fill="url(#areaFill)" stroke="none" />
-  <path d="M 60.00,275.81 L 195.00,231.04 L 330.00,268.64 L 465.00,223.52 L 600.00,176.16 L 735.00,126.39 L 870.00,74.19" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
-  <circle cx="195.00" cy="231.04" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="330.00" cy="268.64" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="465.00" cy="223.52" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="600.00" cy="176.16" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="735.00" cy="126.39" r="2.5" fill="#34d399" opacity="0.85" />
+  <line x1="60" y1="50.00" x2="870" y2="50.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="54.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.32</text><line x1="60" y1="112.50" x2="870" y2="112.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="116.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.23</text><line x1="60" y1="175.00" x2="870" y2="175.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="179.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.14</text><line x1="60" y1="237.50" x2="870" y2="237.50" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="241.50" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$1.05</text><line x1="60" y1="300.00" x2="870" y2="300.00" stroke="#123524" stroke-width="1" stroke-dasharray="4,4" /><text x="50" y="304.00" text-anchor="end" font-size="11" fill="#5fdca0" font-family="monospace">$0.97</text>
+  <path d="M 60.00,275.81 L 175.71,240.62 L 291.43,270.18 L 407.14,234.71 L 522.86,197.48 L 638.57,158.36 L 754.29,117.33 L 870.00,74.19 L 870.00,300.00 L 60.00,300.00 Z" fill="url(#areaFill)" stroke="none" />
+  <path d="M 60.00,275.81 L 175.71,240.62 L 291.43,270.18 L 407.14,234.71 L 522.86,197.48 L 638.57,158.36 L 754.29,117.33 L 870.00,74.19" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+  <circle cx="291.43" cy="270.18" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="407.14" cy="234.71" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="522.86" cy="197.48" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="638.57" cy="158.36" r="2.5" fill="#34d399" opacity="0.85" /><circle cx="754.29" cy="117.33" r="2.5" fill="#34d399" opacity="0.85" />
   
     <circle cx="870.00" cy="74.19" r="3" fill="#a7f3d0" stroke="#07140f" stroke-width="1" />
-    <text x="870.00" y="64.19" text-anchor="middle" font-size="10" fill="#a7f3d0" font-family="monospace">$1.23</text>
+    <text x="870.00" y="64.19" text-anchor="middle" font-size="10" fill="#a7f3d0" font-family="monospace">$1.29</text>
     <circle cx="60.00" cy="275.81" r="3" fill="#fca5a5" stroke="#07140f" stroke-width="1" />
     <text x="60.00" y="293.81" text-anchor="middle" font-size="10" fill="#fca5a5" font-family="monospace">$1.00</text>
     
@@ -25,11 +25,11 @@
     
 
   <text x="60" y="24" font-size="14" fill="#a7f3d0" font-family="monospace" font-weight="bold">$SABIN / USD</text>
-  <text x="60" y="40" font-size="11" fill="#34d399" font-family="monospace">▲ +0.2252 (+22.52%) · last 7 trades</text>
+  <text x="60" y="40" font-size="11" fill="#34d399" font-family="monospace">▲ +0.2865 (+28.65%) · last 8 trades</text>
 
   <g transform="translate(740, 14)">
     <rect x="0" y="0" width="130" height="24" rx="6" fill="#0f2a1d" stroke="#34d399" stroke-width="1" />
-    <text x="65" y="16" text-anchor="middle" font-size="12" fill="#34d399" font-family="monospace" font-weight="bold">$1.2252</text>
+    <text x="65" y="16" text-anchor="middle" font-size="12" fill="#34d399" font-family="monospace" font-weight="bold">$1.2865</text>
   </g>
 
   <g transform="translate(740, 40)">
