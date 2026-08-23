@@ -1,5 +1,5 @@
 {
-  "current_price": 1.2865,
+  "current_price": 1.3508,
   "price_history": [
     1.0,
     1.05,
@@ -8,9 +8,10 @@
     1.1113,
     1.1669,
     1.2252,
-    1.2865
+    1.2865,
+    1.3508
   ],
-  "total_volume": 7,
+  "total_volume": 8,
   "users": {
     "Nishanbhattarai498": {
       "avg_buy_price": 1.1113,
@@ -29,12 +30,12 @@
       "shares": 3
     },
     "tangwep": {
-      "avg_buy_price": 1.1669,
+      "avg_buy_price": 1.2267,
       "buys": [
-        "2026-07-27T07:18:34.824862+00:00"
+        "2026-08-23T08:55:08.509476+00:00"
       ],
       "realized_pnl": 0.0,
-      "shares": 1
+      "shares": 2
     }
   }
 }
